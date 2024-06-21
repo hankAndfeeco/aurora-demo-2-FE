@@ -213,6 +213,10 @@ function App(props) {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
+          <div className="flex justify-between">
+            <Typography variant="caption">{data?.table_data_11[0]?.key_0}</Typography>
+            <Typography variant="caption">{data?.table_data_11[1]?.key_1}</Typography>
+          </div>
         </>
       )}
     </>
