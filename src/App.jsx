@@ -149,7 +149,7 @@ function App(props) {
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={pending}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Typography variant="h2" className="bg-black">
+      <Typography variant="h2" className="bg-red-500">
         Superior Propane demo
       </Typography>
       <section className="container">
