@@ -22,12 +22,19 @@ const VisuallyHiddenInput = styled("input")({
 
 function App(props) {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone()
+  const [data, setData] = useState()
 
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>
       {file.path} - {file.size} bytes
     </li>
   ))
+
+  const parse = () => {
+    fetch("https://jsonplaceholder.typicode.com/todos")
+      .then((response) => response.json())
+      .then((json) => console.log(json))
+  }
 
   return (
     <>
@@ -48,7 +55,7 @@ function App(props) {
 
       {files && files?.length > 0 && (
         <>
-          <Button variant="contained" color="success">
+          <Button onClick={parse} variant="contained" color="success">
             start parsing
           </Button>
         </>
