@@ -44,6 +44,15 @@ function App(props) {
           <ul>{files}</ul>
         </aside>
       </section>
+      <hr></hr>
+
+      {files && files?.length > 0 && (
+        <>
+          <Button variant="contained" color="success">
+            start parsing
+          </Button>
+        </>
+      )}
     </>
   )
 }
