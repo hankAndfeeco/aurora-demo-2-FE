@@ -149,9 +149,7 @@ function App(props) {
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={pending}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Typography variant="h2" className="bg-red-500">
-        Superior Propane demo
-      </Typography>
+      <Typography variant="h2">Superior Propane demo</Typography>
       <section className="container">
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />
@@ -164,11 +162,11 @@ function App(props) {
           <ul>{files}</ul>
         </aside>
       </section>
-      <hr></hr>
+      <hr className="my-2"></hr>
 
       {files && files?.length > 0 && (
         <>
-          <Button onClick={parse} variant="contained" color="success">
+          <Button className="my-2" onClick={parse} variant="contained" color="success">
             start parsing
           </Button>
         </>
