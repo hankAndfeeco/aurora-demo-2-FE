@@ -4,7 +4,21 @@ import { useDropzone } from "react-dropzone"
 import viteLogo from "/vite.svg"
 import Dropzone from "react-dropzone"
 import "./App.css"
-import { Typography } from "@mui/material"
+import { Typography, Button } from "@mui/material"
+import { styled } from "@mui/material/styles"
+import CloudUploadIcon from "@mui/icons-material/CloudUpload"
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+})
 
 function App(props) {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone()
@@ -21,10 +35,13 @@ function App(props) {
       <section className="container">
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />
-          <p>Drag 'n' drop some files here, or click to select files</p>
+          <Button component="label" role={undefined} variant="contained" tabIndex={-1} startIcon={<CloudUploadIcon />}>
+            Upload file
+            <VisuallyHiddenInput />
+          </Button>
         </div>
         <aside>
-          <h4>Files</h4>
+          <Typography variant="h4">File</Typography>
           <ul>{files}</ul>
         </aside>
       </section>
