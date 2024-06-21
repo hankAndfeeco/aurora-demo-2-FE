@@ -160,7 +160,7 @@ function App(props) {
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={pending}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Typography variant="h1">Aurora demo 2</Typography>
+      <Typography variant="h2">Superior Propane demo</Typography>
       <section className="container">
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />
@@ -199,7 +199,7 @@ function App(props) {
                 <TableBody>
                   {data?.line_items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                      <TableRow hover role="checkbox" tabIndex={-1} key={row?.acct_}>
                         {columns.map((column) => {
                           const value = row[column.id]
                           return (
