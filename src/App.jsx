@@ -41,7 +41,6 @@ function App(props) {
           </Button>
         </div>
         <aside>
-          <Typography variant="h4">File</Typography>
           <ul>{files}</ul>
         </aside>
       </section>
