@@ -13,11 +13,12 @@ import axios from "axios"
 import Paper from "@mui/material/Paper"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
-import TableCell from "@mui/material/TableCell"
+import TableCell, { tableCellClasses } from "@mui/material/TableCell"
 import TableContainer from "@mui/material/TableContainer"
 import TableHead from "@mui/material/TableHead"
 import TablePagination from "@mui/material/TablePagination"
 import TableRow from "@mui/material/TableRow"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -31,39 +32,29 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 })
 
-const columns = [
-  { id: "amount", label: "Amount", minWidth: 170 },
-  { id: "description", label: "Desc", minWidth: 100 },
-  {
-    id: "quantity",
-    label: "Quantity",
-    minWidth: 70,
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    // backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.black,
   },
-  {
-    id: "reason",
-    label: "Reason",
-    minWidth: 70,
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
   },
-  {
-    id: "tax",
-    label: "Tax",
-    minWidth: 70,
+}))
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    // backgroundColor: theme.palette.action.hover,
   },
-  {
-    id: "unit_price",
-    label: "Unit Price",
-    minWidth: 70,
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
   },
-]
-
-function createData(name, code, population, size) {
-  const density = population / size
-  return { name, code, population, size, density }
-}
+}))
 
 function App(props) {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone()
   const [data, setData] = useState({})
+  const [rates, setRates] = useState([])
   const [pending, setPending] = useState(false)
 
   const files = acceptedFiles.map((file) => (
@@ -86,7 +77,16 @@ function App(props) {
 
   const parse = async () => {
     await setPending(true)
-    axios({
+    await axios({
+      url: `https://demoocr.runasp.net/v1/rate`,
+      method: "get",
+      headers: { "Content-Type": "application/json" },
+    }).then((response) => {
+      console.log(response?.data)
+      setRates(response?.data)
+      // setPending(false)
+    })
+    await axios({
       url: `https://demoocr.runasp.net/v1/documents/parse`,
       method: "post",
       data: { file: acceptedFiles[0] },
@@ -127,46 +127,61 @@ function App(props) {
       )}
       {data?.id && (
         <>
-          <Paper sx={{ width: "100%", overflow: "hidden" }}>
-            <TableContainer sx={{ maxHeight: 440 }}>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
-                    {columns.map((column) => (
-                      <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
-                        {column.label}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data?.line_items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={row?.acct_}>
-                        {columns.map((column) => {
-                          const value = row[column.id]
-                          return (
-                            <TableCell className={row?.reason ? "bg-yellow-300" : ""} key={column.id} align={column.align}>
-                              {column.format && typeof value === "number" ? column.format(value) : value}
-                            </TableCell>
-                          )
-                        })}
-                      </TableRow>
-                    )
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component="div"
-              count={data?.line_items?.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
+          <Typography variant="h2">Pricing Sheet</Typography>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="left">Service Description</StyledTableCell>
+                  <StyledTableCell align="left">Alternate Description</StyledTableCell>
+                  <StyledTableCell align="left">rate</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rates?.map((row) => (
+                  <StyledTableRow key={row.name}>
+                    <StyledTableCell align="left">{row?.service_description}</StyledTableCell>
+                    <StyledTableCell align="left">{row?.alternate_description}</StyledTableCell>
+                    <StyledTableCell align="left">{row?.rate}</StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <br></br>
+          <Typography variant="h2">Parsing Result</Typography>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="left">Amount</StyledTableCell>
+                  <StyledTableCell align="left">Description</StyledTableCell>
+                  <StyledTableCell align="left">Quantity</StyledTableCell>
+                  <StyledTableCell align="left">Reason</StyledTableCell>
+                  <StyledTableCell align="left">Tax</StyledTableCell>
+                  <StyledTableCell align="left">Unit Price</StyledTableCell>
+                  <StyledTableCell align="left">Action</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data?.line_items?.map((row) => (
+                  <StyledTableRow key={row.name}>
+                    <StyledTableCell align="left">{row?.amount}</StyledTableCell>
+                    <StyledTableCell align="left">{row?.description}</StyledTableCell>
+                    <StyledTableCell align="left">{row?.quantity}</StyledTableCell>
+                    <StyledTableCell className={row?.reason ? "bg-yello-300" : ""} align="left">
+                      <div className={row?.reason ? "bg-yello-300" : ""}>{row?.reason}</div>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{row?.tax}</StyledTableCell>
+                    <StyledTableCell align="left">{row?.unit_price}</StyledTableCell>
+                    <StyledTableCell align="left">
+                      <CheckCircleIcon />
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </>
       )}
     </>
