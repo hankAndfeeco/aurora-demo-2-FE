@@ -32,73 +32,27 @@ const VisuallyHiddenInput = styled("input")({
 })
 
 const columns = [
-  { id: "acct_", label: "Acct_", minWidth: 170 },
-  { id: "date", label: "Date", minWidth: 100 },
+  { id: "amount", label: "Amount", minWidth: 170 },
+  { id: "description", label: "Desc", minWidth: 100 },
   {
-    id: "delivery_address",
-    label: "Delivery Address",
+    id: "quantity",
+    label: "Quantity",
     minWidth: 70,
-    align: "right",
   },
   {
-    id: "gross_amount",
-    label: "Gross Amount",
+    id: "reason",
+    label: "Reason",
     minWidth: 70,
-    align: "right",
   },
   {
-    id: "gst",
-    label: "GST",
+    id: "tax",
+    label: "Tax",
     minWidth: 70,
-    align: "right",
   },
   {
-    id: "haz_mat",
-    label: "Haz Mat",
+    id: "unit_price",
+    label: "Unit Price",
     minWidth: 70,
-    align: "right",
-  },
-  {
-    id: "litres",
-    label: "Litres",
-    minWidth: 70,
-    align: "right",
-  },
-  {
-    id: "pricelitre",
-    label: "Pricelitre",
-    minWidth: 70,
-    align: "right",
-  },
-  {
-    id: "reference",
-    label: "Reference",
-    minWidth: 70,
-    align: "right",
-  },
-  {
-    id: "sk_fuel_tax",
-    label: "Sk Fuel Tax",
-    minWidth: 70,
-    align: "right",
-  },
-  {
-    id: "sk_pst",
-    label: "Sk PST",
-    minWidth: 70,
-    align: "right",
-  },
-  {
-    id: "tank_",
-    label: "Tank",
-    minWidth: 70,
-    align: "right",
-  },
-  {
-    id: "total_amount",
-    label: "Total Amount",
-    minWidth: 70,
-    align: "right",
   },
 ]
 
@@ -171,7 +125,7 @@ function App(props) {
           </Button>
         </>
       )}
-      {data?.document_id && (
+      {data?.id && (
         <>
           <Paper sx={{ width: "100%", overflow: "hidden" }}>
             <TableContainer sx={{ maxHeight: 440 }}>
@@ -192,7 +146,7 @@ function App(props) {
                         {columns.map((column) => {
                           const value = row[column.id]
                           return (
-                            <TableCell key={column.id} align={column.align}>
+                            <TableCell className={row?.reason ? "bg-yellow-400" : ""} key={column.id} align={column.align}>
                               {column.format && typeof value === "number" ? column.format(value) : value}
                             </TableCell>
                           )
@@ -213,10 +167,6 @@ function App(props) {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
-          <div className="flex justify-between">
-            <Typography variant="caption">{data?.table_data_11[0]?.key_0}</Typography>
-            <Typography variant="caption">{data?.table_data_11[1]?.key_1}</Typography>
-          </div>
         </>
       )}
     </>
