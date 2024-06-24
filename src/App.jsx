@@ -146,7 +146,7 @@ function App(props) {
                         {columns.map((column) => {
                           const value = row[column.id]
                           return (
-                            <TableCell className={row?.reason ? "bg-yellow-400" : ""} key={column.id} align={column.align}>
+                            <TableCell className={row?.reason ? "bg-yellow-300" : ""} key={column.id} align={column.align}>
                               {column.format && typeof value === "number" ? column.format(value) : value}
                             </TableCell>
                           )
