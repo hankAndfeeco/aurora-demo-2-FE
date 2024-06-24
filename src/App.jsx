@@ -19,6 +19,7 @@ import TableHead from "@mui/material/TableHead"
 import TablePagination from "@mui/material/TablePagination"
 import TableRow from "@mui/material/TableRow"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import { produce } from "immer"
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -164,18 +165,30 @@ function App(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data?.line_items?.map((row) => (
+                {data?.line_items?.map((row, index) => (
                   <StyledTableRow key={row.name}>
                     <StyledTableCell align="left">{row?.amount}</StyledTableCell>
                     <StyledTableCell align="left">{row?.description}</StyledTableCell>
                     <StyledTableCell align="left">{row?.quantity}</StyledTableCell>
-                    <StyledTableCell className={row?.reason ? "bg-yello-300" : ""} align="left">
-                      <div className={row?.reason ? "bg-yello-300" : ""}>{row?.reason}</div>
+                    <StyledTableCell className={row?.reason ? "bg-yellow-300" : ""} align="left">
+                      {row?.reason}
                     </StyledTableCell>
                     <StyledTableCell align="left">{row?.tax}</StyledTableCell>
                     <StyledTableCell align="left">{row?.unit_price}</StyledTableCell>
                     <StyledTableCell align="left">
-                      <CheckCircleIcon />
+                      {row?.reason ? (
+                        <CheckCircleIcon
+                          onClick={() => {
+                            setData(
+                              produce(data, (draft) => {
+                                draft.line_items[index].reason = ""
+                              })
+                            )
+                          }}
+                        />
+                      ) : (
+                        ""
+                      )}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
